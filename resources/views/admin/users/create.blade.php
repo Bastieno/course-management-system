@@ -89,9 +89,15 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="department" class="form-label">Department <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control @error('department') is-invalid @enderror"
-                                           id="department" name="department" value="{{ old('department') }}"
-                                           placeholder="e.g., Computer Science" required>
+                                    <select class="form-select @error('department') is-invalid @enderror"
+                                            id="department" name="department" required>
+                                        <option value="">Select Department</option>
+                                        @foreach($departments as $id => $name)
+                                            <option value="{{ $name }}" {{ old('department') == $name ? 'selected' : '' }}>
+                                                {{ $name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     @error('department')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror

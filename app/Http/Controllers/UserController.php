@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Department;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -47,11 +48,10 @@ class UserController extends Controller
 
         $users = $query->orderBy('created_at', 'desc')->paginate(15);
 
-        // Get unique departments for filter dropdown
-        $departments = User::whereNotNull('department')
-                          ->distinct()
-                          ->pluck('department')
-                          ->sort();
+        // Get departments from the departments table
+        $departments = Department::active()
+                                ->orderBy('name')
+                                ->pluck('name');
 
         return view('admin.users.index', compact('users', 'departments'));
     }
@@ -61,7 +61,11 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        $departments = Department::active()
+                                ->orderBy('name')
+                                ->pluck('name', 'id');
+        
+        return view('admin.users.create', compact('departments'));
     }
 
     /**
@@ -101,7 +105,11 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        $departments = Department::active()
+                                ->orderBy('name')
+                                ->pluck('name', 'id');
+        
+        return view('admin.users.edit', compact('user', 'departments'));
     }
 
     /**
