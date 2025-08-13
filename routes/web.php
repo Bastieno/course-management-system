@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\CourseMaterialController;
 
 // Redirect root based on authentication status
 Route::get('/', function () {
@@ -78,6 +79,18 @@ Route::middleware('auth')->group(function () {
         Route::post('/courses/{course}/enrollments', [EnrollmentController::class, 'adminEnroll'])->name('admin.enrollments.enroll');
         Route::delete('/courses/{course}/enrollments/{student}', [EnrollmentController::class, 'adminUnenroll'])->name('admin.enrollments.unenroll');
         Route::post('/courses/{course}/enrollments/bulk', [EnrollmentController::class, 'bulkEnroll'])->name('admin.enrollments.bulk-enroll');
+
+        // Course Materials Management Routes (Admin)
+        Route::prefix('courses/{course}/materials')->group(function () {
+            Route::get('/', [CourseMaterialController::class, 'index'])->name('admin.courses.materials.index');
+            Route::get('/create', [CourseMaterialController::class, 'create'])->name('admin.courses.materials.create');
+            Route::post('/', [CourseMaterialController::class, 'store'])->name('admin.courses.materials.store');
+            Route::get('/{material}', [CourseMaterialController::class, 'show'])->name('admin.courses.materials.show');
+            Route::get('/{material}/edit', [CourseMaterialController::class, 'edit'])->name('admin.courses.materials.edit');
+            Route::put('/{material}', [CourseMaterialController::class, 'update'])->name('admin.courses.materials.update');
+            Route::delete('/{material}', [CourseMaterialController::class, 'destroy'])->name('admin.courses.materials.destroy');
+            Route::get('/{material}/download', [CourseMaterialController::class, 'download'])->name('admin.courses.materials.download');
+        });
     });
 
     // Lecturer Routes
@@ -88,6 +101,18 @@ Route::middleware('auth')->group(function () {
         Route::resource('assignments', App\Http\Controllers\AssignmentController::class, ['as' => 'lecturer']);
         Route::get('/assignments/{assignment}/submissions', [App\Http\Controllers\AssignmentController::class, 'submissions'])->name('lecturer.assignments.submissions');
         Route::post('/assignments/{assignment}/submissions/{submission}/grade', [App\Http\Controllers\AssignmentController::class, 'gradeSubmission'])->name('lecturer.assignments.grade-submission');
+
+        // Course Materials Management Routes (Lecturer)
+        Route::prefix('courses/{course}/materials')->group(function () {
+            Route::get('/', [CourseMaterialController::class, 'index'])->name('lecturer.courses.materials.index');
+            Route::get('/create', [CourseMaterialController::class, 'create'])->name('lecturer.courses.materials.create');
+            Route::post('/', [CourseMaterialController::class, 'store'])->name('lecturer.courses.materials.store');
+            Route::get('/{material}', [CourseMaterialController::class, 'show'])->name('lecturer.courses.materials.show');
+            Route::get('/{material}/edit', [CourseMaterialController::class, 'edit'])->name('lecturer.courses.materials.edit');
+            Route::put('/{material}', [CourseMaterialController::class, 'update'])->name('lecturer.courses.materials.update');
+            Route::delete('/{material}', [CourseMaterialController::class, 'destroy'])->name('lecturer.courses.materials.destroy');
+            Route::get('/{material}/download', [CourseMaterialController::class, 'download'])->name('lecturer.courses.materials.download');
+        });
     });
 
     // Student Routes
@@ -105,6 +130,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/assignments/{assignment}/submit', [App\Http\Controllers\SubmissionController::class, 'submit'])->name('student.assignments.submit');
         Route::put('/assignments/{assignment}/update', [App\Http\Controllers\SubmissionController::class, 'update'])->name('student.assignments.update');
         Route::delete('/assignments/{assignment}/delete', [App\Http\Controllers\SubmissionController::class, 'destroy'])->name('student.assignments.delete');
+
+        // Course Materials Access Routes (Student - Read Only)
+        Route::prefix('courses/{course}/materials')->group(function () {
+            Route::get('/', [CourseMaterialController::class, 'index'])->name('student.courses.materials.index');
+            Route::get('/{material}', [CourseMaterialController::class, 'show'])->name('student.courses.materials.show');
+            Route::get('/{material}/download', [CourseMaterialController::class, 'download'])->name('student.courses.materials.download');
+        });
     });
 
     // General Dashboard (fallback)
