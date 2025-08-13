@@ -13,6 +13,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // First, seed departments to ensure they exist
+        $this->call([
+            DepartmentSeeder::class,
+        ]);
+
+        // Then create users with valid departments
         // Create Admin User
         User::create([
             'name' => 'System Administrator',
