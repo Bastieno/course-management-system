@@ -115,14 +115,14 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="max_score" class="form-label">Maximum Score <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control @error('max_score') is-invalid @enderror"
-                                           id="max_score" name="max_score" value="{{ old('max_score', 100) }}"
+                                    <label for="points" class="form-label">Maximum Points <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control @error('points') is-invalid @enderror"
+                                           id="points" name="points" value="{{ old('points', 100) }}"
                                            min="1" max="1000" required>
-                                    @error('max_score')
+                                    @error('points')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                    <div class="form-text">Enter the maximum possible score for this assignment.</div>
+                                    <div class="form-text">Enter the maximum possible points for this assignment.</div>
                                 </div>
                             </div>
 
@@ -178,7 +178,7 @@
             const titleInput = document.getElementById('title');
             const descriptionInput = document.getElementById('description');
             const dueDateInput = document.getElementById('due_date');
-            const maxScoreInput = document.getElementById('max_score');
+            const maxScoreInput = document.getElementById('points');
 
             // Update preview when inputs change
             courseSelect.addEventListener('change', updatePreview);

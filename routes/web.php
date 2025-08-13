@@ -8,6 +8,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\CourseMaterialController;
+use App\Http\Controllers\ProfileController;
 
 // Redirect root based on authentication status
 Route::get('/', function () {
@@ -38,6 +39,10 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout.get');
 
 // Protected Routes
 Route::middleware('auth')->group(function () {
+    // Profile Routes (for all authenticated users)
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
     // Admin Routes
     Route::prefix('admin')->middleware('role:admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
@@ -47,6 +52,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/users/bulk-delete', [UserController::class, 'bulkArchive'])->name('admin.users.bulk-archive');
         Route::post('/users/{user}/archive', [UserController::class, 'archive'])->name('admin.users.archive');
         Route::post('/users/{user}/unarchive', [UserController::class, 'unarchive'])->name('admin.users.unarchive');
+        Route::delete('/users/{user}/destroy', [UserController::class, 'destroy'])->name('admin.users.destroy');
 
         // Course Management Routes
         Route::resource('courses', CourseController::class, ['as' => 'admin']);

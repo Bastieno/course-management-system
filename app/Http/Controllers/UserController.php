@@ -191,4 +191,27 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')
                         ->with('success', count($userIds) . ' users archived successfully!');
     }
+
+    /**
+     * Permanently delete the specified user (Admin only)
+     */
+    public function destroy(User $user)
+    {
+        // Prevent admin from deleting themselves
+        if ($user->id === auth()->id()) {
+            return redirect()->route('admin.users.index')
+                            ->with('error', 'You cannot delete your own account!');
+        }
+
+        // Only allow deletion of archived users
+        if (!$user->isArchived()) {
+            return redirect()->route('admin.users.index')
+                            ->with('error', 'Please archive the user first before permanent deletion!');
+        }
+
+        $user->delete();
+
+        return redirect()->route('admin.users.index')
+                        ->with('success', 'User permanently deleted!');
+    }
 }

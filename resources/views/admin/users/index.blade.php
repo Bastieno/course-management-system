@@ -190,6 +190,14 @@
                                                                 <i class="fas fa-undo"></i>
                                                             </button>
                                                         </form>
+                                                        <form method="POST" action="{{ route('admin.users.destroy', $user) }}"
+                                                              class="d-inline" onsubmit="return confirm('WARNING: This will permanently delete this user and cannot be undone. Are you sure?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Permanently Delete">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
                                                     @else
                                                         <form method="POST" action="{{ route('admin.users.archive', $user) }}"
                                                               class="d-inline" onsubmit="return confirm('Are you sure you want to archive this user?')">
@@ -282,6 +290,14 @@
                                                     @csrf
                                                     <button type="submit" class="btn btn-sm btn-outline-success">
                                                         <i class="fas fa-undo me-1"></i>Unarchive
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="{{ route('admin.users.destroy', $user) }}"
+                                                      class="d-inline" onsubmit="return confirm('WARNING: This will permanently delete this user and cannot be undone. Are you sure?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="fas fa-trash-alt me-1"></i>Delete
                                                     </button>
                                                 </form>
                                             @else

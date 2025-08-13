@@ -37,7 +37,7 @@
                                 <p class="text-muted">Level: {{ auth()->user()->level ?? 'Not specified' }}</p>
                             </div>
                             <div class="col-md-4 text-end">
-                                <button class="btn btn-outline-primary">Edit Profile</button>
+                                <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary">Edit Profile</a>
                             </div>
                         </div>
                     </div>

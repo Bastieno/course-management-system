@@ -29,10 +29,8 @@ class ReportController extends Controller
         ];
 
         // Get monthly user registrations for the last 6 months
-        $monthlyUsers = User::select(
-            DB::raw('YEAR(created_at) as year'),
-            DB::raw('MONTH(created_at) as month'),
-            DB::raw('COUNT(*) as count')
+        $monthlyUsers = User::selectRaw(
+            "strftime('%Y', created_at) as year, strftime('%m', created_at) as month, COUNT(*) as count"
         )
         ->where('created_at', '>=', Carbon::now()->subMonths(6))
         ->groupBy('year', 'month')
@@ -75,9 +73,8 @@ class ReportController extends Controller
             ->get();
 
         // User registrations by month (last 12 months)
-        $userRegistrations = User::select(
-            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
-            DB::raw('COUNT(*) as count')
+        $userRegistrations = User::selectRaw(
+            "strftime('%Y-%m', created_at) as month, COUNT(*) as count"
         )
         ->where('created_at', '>=', Carbon::now()->subMonths(12))
         ->groupBy('month')
@@ -124,9 +121,8 @@ class ReportController extends Controller
             ->get();
 
         // Course creation over time
-        $courseCreation = Course::select(
-            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
-            DB::raw('COUNT(*) as count')
+        $courseCreation = Course::selectRaw(
+            "strftime('%Y-%m', created_at) as month, COUNT(*) as count"
         )
         ->where('created_at', '>=', Carbon::now()->subMonths(12))
         ->groupBy('month')
@@ -154,9 +150,8 @@ class ReportController extends Controller
         ];
 
         // Enrollment trends
-        $enrollmentTrends = Enrollment::select(
-            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
-            DB::raw('COUNT(*) as count')
+        $enrollmentTrends = Enrollment::selectRaw(
+            "strftime('%Y-%m', created_at) as month, COUNT(*) as count"
         )
         ->where('created_at', '>=', Carbon::now()->subMonths(12))
         ->groupBy('month')
@@ -193,9 +188,8 @@ class ReportController extends Controller
             ->get();
 
         // Assignment creation trends
-        $assignmentTrends = Assignment::select(
-            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
-            DB::raw('COUNT(*) as count')
+        $assignmentTrends = Assignment::selectRaw(
+            "strftime('%Y-%m', created_at) as month, COUNT(*) as count"
         )
         ->where('created_at', '>=', Carbon::now()->subMonths(12))
         ->groupBy('month')

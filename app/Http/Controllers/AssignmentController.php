@@ -283,9 +283,8 @@ class AssignmentController extends Controller
         ];
 
         // Assignment creation trends (last 6 months)
-        $assignmentTrends = Assignment::select(
-            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
-            DB::raw('COUNT(*) as count')
+        $assignmentTrends = Assignment::selectRaw(
+            "strftime('%Y-%m', created_at) as month, COUNT(*) as count"
         )
         ->where('created_at', '>=', Carbon::now()->subMonths(6))
         ->groupBy('month')
@@ -299,9 +298,8 @@ class AssignmentController extends Controller
             ->get();
 
         // Submission trends (last 6 months)
-        $submissionTrends = Submission::select(
-            DB::raw('DATE_FORMAT(submitted_at, "%Y-%m") as month'),
-            DB::raw('COUNT(*) as count')
+        $submissionTrends = Submission::selectRaw(
+            "strftime('%Y-%m', submitted_at) as month, COUNT(*) as count"
         )
         ->where('submitted_at', '>=', Carbon::now()->subMonths(6))
         ->groupBy('month')
